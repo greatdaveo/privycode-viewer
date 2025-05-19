@@ -1,0 +1,19 @@
+import { GitHubContentItem } from "../types/github";
+
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+
+// console.log("BACKEND_URL", BACKEND_URL);
+
+export async function fetchRepoContents(
+  token: string
+): Promise<GitHubContentItem[]> {
+  const response = await fetch(`${BACKEND_URL}/view/${token}`);
+  const data = await response.json();
+
+  // console.log("fetchRepoContents:", data);
+
+  if (!response.ok)
+    throw new Error(data?.message || "Failed to fetch repo contents");
+
+  return data;
+}
