@@ -17,3 +17,18 @@ export async function fetchRepoContents(
 
   return data;
 }
+
+export async function fetchFileContent(
+  token: string,
+  path: string
+): Promise<string> {
+  const response = await fetch(
+    `${BACKEND_URL}/view-files/${token}/file?path=${encodeURIComponent(path)}`
+  );
+
+  console.log(response);
+
+  if (!response.ok) throw new Error("Failed to fetch file content");
+
+  return response.text();
+}
