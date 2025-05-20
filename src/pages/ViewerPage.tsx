@@ -47,6 +47,7 @@ export function ViewerPage({ token }: { token: string }) {
         contents={contents}
         selectedFile={selectedFile}
         onSelectFile={handleFileClick}
+        token={token}
       />
 
       <main className="flex-1 overflow-auto p-6">
