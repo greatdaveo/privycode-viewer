@@ -5,7 +5,7 @@ import {
   fetchUserInfo,
 } from "../api/GitHubApi";
 import { GitHubContentItem } from "../types/github";
-import SideBar from "../componets/SideBar";
+import SideBar from "../components/SideBar";
 import MonacoEditor from "@monaco-editor/react";
 
 export function ViewerPage({ token }: { token: string }) {
@@ -117,7 +117,7 @@ export function ViewerPage({ token }: { token: string }) {
     <>
       <header className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-[#161b22]">
         <h1 className="text-xl font-semibold tracking-tight">
-          Testing My Repo
+          Hello 👋, you are currently viewing a GitHub private repository
         </h1>
 
         {userInfo && (
@@ -147,8 +147,8 @@ export function ViewerPage({ token }: { token: string }) {
               </div>
 
               <div className="relative">
-                <div className="pointer-events-none absolute top-[65px] left-[100px] inset-0 flex items-center justify-center z-10 select-none">
-                  <div className="text-[140px] font-bold opacity-10 text-gray-700 dark:text-gray-300 rotate-[-20deg]">
+                <div className="pointer-events-none absolute top-[35px] left-[100px] inset-0 flex items-center justify-center z-10 select-none">
+                  <div className="text-[100px] font-bold opacity-10 text-gray-700 dark:text-gray-300 rotate-[-20deg]">
                     PrivyCode <br /> Confidential <br /> Code
                   </div>
                 </div>

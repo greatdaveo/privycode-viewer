@@ -108,12 +108,27 @@ const DashboardPage = () => {
     }
   };
 
+  // To calculate the total links and views
+  const totalLinks = links.length;
+  const totalViews = links.reduce((sum, link) => sum + link.view_count, 0);
+
   return (
     <div className="min-h-screen bg-white dark:bg-[#0d1117] text-gray-900 dark:text-white px-6 py-12">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold mb-6">
           📊 Your Viewer Links Dashboard
         </h1>
+
+        <div className="mb-6 flex flex-col sm:flex-row gap-4 text-sm text-gray-700 dark:text-gray-300">
+          <div className="bg-gray-100 dark:bg-[#161b22] rounded p-3 shadow-sm">
+            <span className="font-semibold text-lg">{totalLinks}</span> total
+            links
+          </div>
+          <div className="bg-gray-100 dark:bg-[#161b22] rounded p-3 shadow-sm">
+            <span className="font-semibold text-lg">{totalViews}</span> total
+            views
+          </div>
+        </div>
 
         {userInfo && (
           <>

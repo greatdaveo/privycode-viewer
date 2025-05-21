@@ -4,11 +4,12 @@ import { ViewerPage } from "./pages/ViewerPage";
 import HomePage from "./pages/HomePage";
 import DashboardPage from "./pages/DashboardPage";
 import { useEffect } from "react";
-import NavBar from "./componets/NavBar";
+import NavBar from "./components/NavBar";
+import CodeViewerPageWrapper from "./pages/CodeViewerPageWrapper";
 
 export default function App() {
   const token = new URLSearchParams(window.location.search).get("token") || "";
-  console.log("token: ", token);
+  // console.log("token: ", token);
 
   useEffect(() => {
     if (token) {
@@ -22,7 +23,9 @@ export default function App() {
 
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/view" element={<ViewerPage token={token} />} />
+        {/* <Route path="/view" element={<ViewerPage token={token} />} /> */}
+
+        <Route path="/view/:token" element={<CodeViewerPageWrapper />} />
         <Route path="/dashboard" element={<DashboardPage />} />
       </Routes>
     </div>
