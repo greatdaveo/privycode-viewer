@@ -66,6 +66,32 @@ export function ViewerPage({ token }: { token: string }) {
     }
   }
 
+  useEffect(() => {
+    const disableCopy = (e: ClipboardEvent) => e.preventDefault();
+    const disableContextMenu = (e: MouseEvent) => e.preventDefault();
+    const disableKeys = (e: KeyboardEvent) => {
+      if (
+        (e.ctrlKey || e.metaKey) &&
+        ["c", "x,", "s"].includes(e.key.toLocaleLowerCase())
+      ) {
+        e.preventDefault();
+      }
+    };
+
+    document.addEventListener("copy", disableCopy);
+    document.addEventListener("copy", disableCopy);
+    document.addEventListener("contextmenu", disableContextMenu);
+    document.addEventListener("keydown", disableKeys);
+
+    return () => {
+      document.removeEventListener("copy", disableCopy);
+      document.removeEventListener("contextmenu", disableContextMenu);
+      document.removeEventListener("keydown", disableKeys);
+    };
+  }, []);
+
+  
+
   if (error) return <div className="text-red-600">Error: {error}</div>;
 
   return (
@@ -84,9 +110,15 @@ export function ViewerPage({ token }: { token: string }) {
               <h3 className="font-bold text-base">📄 {selectedFile}</h3>
             </div>
 
-            <div className="h-[calc(100vh-140px)] px-6 pb-6 overflow-hidden">
+            <div className="relative">
+              <div className="pointer-events-none absolute top-[65px] left-[100px] inset-0 flex items-center justify-center z-10 select-none">
+                <div className="text-[140px] font-bold opacity-10 text-gray-700 dark:text-gray-300 rotate-[-20deg]">
+                  PrivyCode <br /> Confidential <br /> Code
+                </div>
+              </div>
+
               <MonacoEditor
-                height="100vh"
+                height="80vh"
                 defaultLanguage={detectLanguage(selectedFile || "")}
                 // theme={theme === "dark" ? "vs-dark" : "light"}
                 theme="vs-dark"
@@ -95,7 +127,7 @@ export function ViewerPage({ token }: { token: string }) {
                   readOnly: true,
                   wordWrap: "on",
                   scrollBeyondLastLine: false,
-                  minimap: { enabled: true },
+                  minimap: { enabled: false },
                   automaticLayout: true,
                   smoothScrolling: true,
                 }}
@@ -103,7 +135,7 @@ export function ViewerPage({ token }: { token: string }) {
             </div>
           </>
         ) : (
-          <p className="text-gray-500 text-center text-[20px]">
+          <p className="text-gray-500 text-center text-[50px]">
             Select a file to view its contents.
           </p>
         )}
