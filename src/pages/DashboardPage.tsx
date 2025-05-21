@@ -18,6 +18,7 @@ const DashboardPage = () => {
   const [maxViews, setMaxViews] = useState(100);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [copied, setCopied] = useState<number | null>(null);
 
   const token = localStorage.getItem("github_token");
 
@@ -160,10 +161,29 @@ const DashboardPage = () => {
               <p className="text-sm">
                 Expires: {new Date(link.expires_at).toLocaleDateString()}
               </p>
-              
-              <p className="text-sm text-blue-600 break-all">
-                {`${window.location.origin}/view/${link.token}`}
-              </p>
+
+              <div className="flex items-center gap-2">
+                <p className="text-sm text-blue-600 break-all">
+                  {`${window.location.origin}/view/${link.token}`}
+                </p>
+
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(
+                      `${window.location.origin}/view/${link.token}`
+                    );
+                    setCopied(i);
+                    setTimeout(() => setCopied(null), 2000);
+                  }}
+                  className="text-xs px-2 py-1 rounded bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition cursor-pointer"
+                >
+                  Copy
+                </button>
+              </div>
+
+              {copied === i && (
+                <span className="text-green-500 text-xs">Copied!</span>
+              )}
             </div>
           ))}
         </div>
