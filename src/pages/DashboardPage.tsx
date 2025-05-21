@@ -1,3 +1,4 @@
+import { div } from "framer-motion/client";
 import { useEffect, useState } from "react";
 
 type ViewerLink = {
@@ -12,15 +13,35 @@ type ViewerLink = {
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 const DashboardPage = () => {
+  const [userInfo, setUserInfo] = useState<{
+    github_username: string;
+    email: string;
+  } | null>(null);
+
   const [links, setLinks] = useState<ViewerLink[]>([]);
   const [repoName, setRepoName] = useState("");
   const [expiresIn, setExpiresIn] = useState(3);
   const [maxViews, setMaxViews] = useState(100);
   const [error, setError] = useState("");
+
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState<number | null>(null);
 
   const token = localStorage.getItem("github_token");
+
+  // To fetch user info
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      const response = await fetch(`${BACKEND_URL}/me`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      const data = await response.json();
+      setUserInfo(data);
+    };
+
+    fetchUserInfo();
+  }, []);
 
   // To fetch the viewer links on load
   useEffect(() => {
@@ -89,7 +110,23 @@ const DashboardPage = () => {
 
   return (
     <div className="min-h-screen bg-white dark:bg-[#0d1117] text-gray-900 dark:text-white px-6 py-12">
-      <h1 className="text-3xl font-bold mb-6">📊 Your Viewer Links</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-3xl font-bold mb-6">
+          📊 Your Viewer Links Dashboard
+        </h1>
+
+        {userInfo && (
+          <>
+            <div className="text-sm text-gray-500 mb-4">
+              Welcome{" "}
+              <span className="font-semibold">
+                @{userInfo.github_username} 👋
+              </span>
+            </div>
+          </>
+        )}
+      </div>
+
       {error && <p className="text-red-500">{error}</p>}
 
       <form

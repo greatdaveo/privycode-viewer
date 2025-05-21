@@ -4,6 +4,7 @@ import { ViewerPage } from "./pages/ViewerPage";
 import HomePage from "./pages/HomePage";
 import DashboardPage from "./pages/DashboardPage";
 import { useEffect } from "react";
+import NavBar from "./componets/NavBar";
 
 export default function App() {
   const token = new URLSearchParams(window.location.search).get("token") || "";
@@ -16,7 +17,9 @@ export default function App() {
   }, []);
 
   return (
-    <div className="bg-white dark:bg-[#1e1e1e] text-gray-900 dark:text-gray-100 min-h-screen">
+    <div className="bg-gradient-to-b from-white to-gray-100 dark:from-[#0d1117] dark:to-[#161b22] flex flex-col text-gray-900 dark:text-gray-100 font-sans min-h-screen">
+      <NavBar />
+
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/view" element={<ViewerPage token={token} />} />
