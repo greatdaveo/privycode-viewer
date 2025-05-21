@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
-import { fetchFileContent, fetchRepoContents } from "../api/GitHubApi";
+import {
+  fetchFileContent,
+  fetchRepoContents,
+  fetchUserInfo,
+} from "../api/GitHubApi";
 import { GitHubContentItem } from "../types/github";
 import SideBar from "../componets/SideBar";
 import MonacoEditor from "@monaco-editor/react";
@@ -8,6 +12,10 @@ export function ViewerPage({ token }: { token: string }) {
   const [contents, setContents] = useState<GitHubContentItem[]>([]);
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
   const [fileContent, setFileContent] = useState<string>("");
+  const [userInfo, setUserInfo] = useState<{
+    github_username: string;
+    repo_name: string;
+  } | null>(null);
 
   const [error, setError] = useState("");
 
@@ -24,6 +32,19 @@ export function ViewerPage({ token }: { token: string }) {
     };
 
     loadContents();
+  }, [token]);
+
+  useEffect(() => {
+    const loadUserInfo = async () => {
+      try {
+        const info = await fetchUserInfo(token);
+        setUserInfo(info);
+      } catch (error: any) {
+        console.log("❌ Could not load viewer info: ", error);
+      }
+    };
+
+    loadUserInfo();
   }, [token]);
 
   const handleFileClick = async (path: string) => {
@@ -90,56 +111,72 @@ export function ViewerPage({ token }: { token: string }) {
     };
   }, []);
 
-  
-
   if (error) return <div className="text-red-600">Error: {error}</div>;
 
   return (
-    <div className="flex h-screen text-sm bg-white dark:bg-[#1e1e1e] text-gray-900 dark:text-gray-100 font-mono">
-      <SideBar
-        contents={contents}
-        selectedFile={selectedFile}
-        onSelectFile={handleFileClick}
-        token={token}
-      />
+    <>
+      <header className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-[#161b22]">
+        <h1 className="text-xl font-semibold tracking-tight">
+          Testing My Repo
+        </h1>
 
-      <main className="flex-1 overflow-hidden p-0">
-        {selectedFile ? (
-          <>
-            <div className="px-6 py-4 border-b border-gray-300 dark:border-gray-700">
-              <h3 className="font-bold text-base">📄 {selectedFile}</h3>
-            </div>
+        {userInfo && (
+          <div className="text-sm font-medium text-gray-800 dark:text-gray-200">
+            <span className="text-blue-600 dark:text-blue-400">
+              {userInfo.github_username}
+            </span>
+            {" / "}
+            <span>{userInfo.repo_name}</span>
+          </div>
+        )}
+      </header>
 
-            <div className="relative">
-              <div className="pointer-events-none absolute top-[65px] left-[100px] inset-0 flex items-center justify-center z-10 select-none">
-                <div className="text-[140px] font-bold opacity-10 text-gray-700 dark:text-gray-300 rotate-[-20deg]">
-                  PrivyCode <br /> Confidential <br /> Code
-                </div>
+      <div className="flex h-screen text-sm bg-white dark:bg-[#1e1e1e] text-gray-900 dark:text-gray-100 font-mono">
+        <SideBar
+          contents={contents}
+          selectedFile={selectedFile}
+          onSelectFile={handleFileClick}
+          token={token}
+        />
+
+        <main className="flex-1 overflow-hidden p-0">
+          {selectedFile ? (
+            <>
+              <div className="px-6 py-4 border-b border-gray-300 dark:border-gray-700">
+                <h3 className="font-bold text-base">📄 {selectedFile}</h3>
               </div>
 
-              <MonacoEditor
-                height="80vh"
-                defaultLanguage={detectLanguage(selectedFile || "")}
-                // theme={theme === "dark" ? "vs-dark" : "light"}
-                theme="vs-dark"
-                value={fileContent}
-                options={{
-                  readOnly: true,
-                  wordWrap: "on",
-                  scrollBeyondLastLine: false,
-                  minimap: { enabled: false },
-                  automaticLayout: true,
-                  smoothScrolling: true,
-                }}
-              />
-            </div>
-          </>
-        ) : (
-          <p className="text-gray-500 text-center text-[50px]">
-            Select a file to view its contents.
-          </p>
-        )}
-      </main>
-    </div>
+              <div className="relative">
+                <div className="pointer-events-none absolute top-[65px] left-[100px] inset-0 flex items-center justify-center z-10 select-none">
+                  <div className="text-[140px] font-bold opacity-10 text-gray-700 dark:text-gray-300 rotate-[-20deg]">
+                    PrivyCode <br /> Confidential <br /> Code
+                  </div>
+                </div>
+
+                <MonacoEditor
+                  height="80vh"
+                  defaultLanguage={detectLanguage(selectedFile || "")}
+                  // theme={theme === "dark" ? "vs-dark" : "light"}
+                  theme="vs-dark"
+                  value={fileContent}
+                  options={{
+                    readOnly: true,
+                    wordWrap: "on",
+                    scrollBeyondLastLine: false,
+                    minimap: { enabled: false },
+                    automaticLayout: true,
+                    smoothScrolling: true,
+                  }}
+                />
+              </div>
+            </>
+          ) : (
+            <p className="text-gray-500 text-center text-[50px]">
+              Select a file to view its contents.
+            </p>
+          )}
+        </main>
+      </div>
+    </>
   );
 }
