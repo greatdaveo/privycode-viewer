@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 import { ViewerPage } from "./pages/ViewerPage";
 import { fetchUserInfo } from "./api/GitHubApi";
@@ -12,15 +12,18 @@ export default function App() {
     repo_name: string;
   } | null>(null);
 
-  const loadUserInfo = async () => {
-    try {
-      const info = await fetchUserInfo(token);
-      setUserInfo(info);
-    } catch (error: any) {
-      console.log("❌ Could not load viewer info: ", error);
-    }
-  };
-  loadUserInfo();
+  useEffect(() => {
+    const loadUserInfo = async () => {
+      try {
+        const info = await fetchUserInfo(token);
+        setUserInfo(info);
+      } catch (error: any) {
+        console.log("❌ Could not load viewer info: ", error);
+      }
+    };
+
+    loadUserInfo();
+  }, [token]);
 
   return (
     <div className="flex flex-col min-h-screen bg-white dark:bg-[#1e1e1e] text-gray-900 dark:text-gray-100">
