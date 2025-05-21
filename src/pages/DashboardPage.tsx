@@ -13,21 +13,26 @@ const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 const DashboardPage = () => {
   const [links, setLinks] = useState<ViewerLink[]>([]);
+  const [repoName, setRepoName] = useState("");
+  const [expiresIn, setExpiresIn] = useState(3);
+  const [maxViews, setMaxViews] = useState(100);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const token = localStorage.getItem("github_token"); // ✅ Store this at login
+  const token = localStorage.getItem("github_token");
 
+  // To fetch the viewer links on load
   useEffect(() => {
     const fetchLinks = async () => {
       try {
-        const res = await fetch(`${BACKEND_URL}/dashboard`, {
+        const response = await fetch(`${BACKEND_URL}/dashboard`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
 
-        if (!res.ok) throw new Error("Failed to load viewer links");
-        const data = await res.json();
+        if (!response.ok) throw new Error("Failed to load viewer links");
+        const data = await response.json();
         setLinks(data);
       } catch (err: any) {
         setError(err.message);
@@ -37,28 +42,125 @@ const DashboardPage = () => {
     fetchLinks();
   }, []);
 
+  // Tp create the viewer link
+  const handleCreateLink = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      const response = await fetch(`${BACKEND_URL}/generate-viewer-link`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          repo_name: repoName,
+          expires_in_days: expiresIn,
+          max_views: maxViews,
+        }),
+      });
+
+      if (!response.ok) throw new Error("Failed to generate link");
+
+      const data = await response.json();
+
+      console.log("Generated:", data);
+
+      // To re-fetch links
+      const updated = await fetch(`${BACKEND_URL}/dashboard`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      const refreshed = await updated.json();
+      console.log(refreshed);
+
+      setLinks(refreshed);
+      setRepoName("");
+      setMaxViews(100);
+      setExpiresIn(3);
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-white dark:bg-[#0d1117] text-gray-900 dark:text-white px-6 py-12">
-      <h1 className="text-3xl font-bold mb-8">📊 Your Viewer Links</h1>
-
+      <h1 className="text-3xl font-bold mb-6">📊 Your Viewer Links</h1>
       {error && <p className="text-red-500">{error}</p>}
 
+      <form
+        onSubmit={handleCreateLink}
+        className="bg-gray-50 dark:bg-[#161b22] border border-gray-300 dark:border-gray-700 p-6 rounded-lg mb-8 space-y-4"
+      >
+        <div>
+          <label className="block font-semibold mb-1">GitHub Repo Name</label>
+          <input
+            value={repoName}
+            onChange={(e) => setRepoName(e.target.value)}
+            required
+            className="w-full px-3 py-2 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800"
+            placeholder="e.g. my-private-repo"
+          />
+        </div>
+
+        <div className="flex gap-4">
+          <div className="flex-1">
+            <label className="block font-semibold mb-1">
+              Expires In (days)
+            </label>
+            <input
+              type="number"
+              value={expiresIn}
+              onChange={(e) => setExpiresIn(Number(e.target.value))}
+              min={1}
+              className="w-full px-3 py-2 rounded border bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600"
+            />
+          </div>
+
+          <div className="flex-1">
+            <label className="block font-semibold mb-1">Max Views</label>
+            <input
+              type="number"
+              value={maxViews}
+              onChange={(e) => setMaxViews(Number(e.target.value))}
+              min={1}
+              className="w-full px-3 py-2 rounded border bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600"
+            />
+          </div>
+        </div>
+
+        <button
+          type="submit"
+          disabled={loading}
+          className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded transition"
+        >
+          {loading ? "Creating..." : "Create Viewer Link"}
+        </button>
+      </form>
+
+      {/* Viewer Links List */}
       {links.length === 0 ? (
         <p>No links created yet.</p>
       ) : (
         <div className="grid gap-6">
-          {links.map((link) => (
+          {links.map((link, i) => (
             <div
-              key={link.id}
+              key={i}
               className="p-4 border border-gray-300 dark:border-gray-700 rounded-lg shadow-md bg-gray-50 dark:bg-[#161b22]"
             >
               <p className="font-semibold text-lg">{link.repo_name}</p>
+
               <p className="text-sm text-gray-500">
                 Views: {link.view_count} / {link.max_views}
               </p>
+
               <p className="text-sm">
                 Expires: {new Date(link.expires_at).toLocaleDateString()}
               </p>
+              
               <p className="text-sm text-blue-600 break-all">
                 {`${window.location.origin}/view/${link.token}`}
               </p>
