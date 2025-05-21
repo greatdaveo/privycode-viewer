@@ -32,3 +32,14 @@ export async function fetchFileContent(
 
   return response.text();
 }
+
+export async function fetchUserInfo(token: string): Promise<{
+  github_username: string;
+  repo_name: string;
+}> {
+  const response = await fetch(`${BACKEND_URL}/view-info/${token}`);
+
+  if (!response.ok) throw new Error("Failed to fetch viewer info");
+
+  return response.json();
+}
