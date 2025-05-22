@@ -1,6 +1,5 @@
 import { Routes, Route } from "react-router-dom";
 import "./App.css";
-import { ViewerPage } from "./pages/ViewerPage";
 import HomePage from "./pages/HomePage";
 import DashboardPage from "./pages/DashboardPage";
 import { useEffect } from "react";
@@ -23,7 +22,6 @@ export default function App() {
 
       <Routes>
         <Route path="/" element={<HomePage />} />
-        {/* <Route path="/view" element={<ViewerPage token={token} />} /> */}
 
         <Route path="/view/:token" element={<CodeViewerPageWrapper />} />
         <Route path="/dashboard" element={<DashboardPage />} />
