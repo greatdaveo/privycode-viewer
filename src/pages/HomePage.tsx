@@ -40,7 +40,7 @@ const HomePage = () => {
           </div>
 
           <p className="mt-6 text-sm text-gray-500 dark:text-gray-400 animate-fade-in delay-500">
-            Built by Olowomeye David ·{" "}
+            Developed by David Olowomeye ·{" "}
             <a
               href="https://github.com/greatdaveo"
               target="_blank"
