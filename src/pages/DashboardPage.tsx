@@ -27,20 +27,7 @@ const DashboardPage = () => {
   const [copied, setCopied] = useState<number | null>(null);
 
   const token = localStorage.getItem("github_token");
-
-  // To fetch user info
-  useEffect(() => {
-    const fetchUserInfo = async () => {
-      const response = await fetch(`${BACKEND_URL}/me`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      const data = await response.json();
-      setUserInfo(data);
-    };
-
-    fetchUserInfo();
-  }, []);
+  // console.log(token);
 
   // To fetch the viewer links on load
   useEffect(() => {
@@ -52,16 +39,24 @@ const DashboardPage = () => {
           },
         });
 
-        if (!response.ok) throw new Error("Failed to load viewer links");
+        console.log(response);
+
+        if (!response.ok) {
+          const text = await response.text(); // just in case
+          console.log("❌ Failed to load viewer links: ", text);
+          throw new Error(text);
+        }
+
         const data = await response.json();
         setLinks(data);
       } catch (err: any) {
+        console.log(err);
         setError(err.message);
       }
     };
 
     fetchLinks();
-  }, []);
+  }, [token]);
 
   // Tp create the viewer link
   const handleCreateLink = async (e: React.FormEvent) => {
@@ -81,6 +76,8 @@ const DashboardPage = () => {
           max_views: maxViews,
         }),
       });
+
+      console.log(response);
 
       if (!response.ok) throw new Error("Failed to generate link");
 
@@ -106,6 +103,30 @@ const DashboardPage = () => {
       setLoading(false);
     }
   };
+
+  // To fetch user info
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        const response = await fetch(`${BACKEND_URL}/me`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(errorText);
+        }
+
+        const data = await response.json();
+        setUserInfo(data);
+      } catch (err: any) {
+        console.error("❌ Error loading user info:", err);
+        setError(err.message);
+      }
+    };
+
+    if (token) fetchUserInfo();
+  }, [token]);
 
   // To calculate the total links and views
   const totalLinks = links.length;
@@ -187,7 +208,7 @@ const DashboardPage = () => {
         <button
           type="submit"
           disabled={loading}
-          className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded transition"
+          className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded transition cursor-pointer"
         >
           {loading ? "Creating..." : "Create Viewer Link"}
         </button>
