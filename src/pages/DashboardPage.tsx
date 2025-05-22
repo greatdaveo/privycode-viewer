@@ -19,10 +19,13 @@ const DashboardPage = () => {
 
   const [links, setLinks] = useState<ViewerLink[]>([]);
   const [repoName, setRepoName] = useState("");
-  const [expiresIn, setExpiresIn] = useState(3);
+  const [expiresIn, setExpiresIn] = useState(30);
   const [maxViews, setMaxViews] = useState(100);
   const [error, setError] = useState("");
   const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState<
+    "all" | "active" | "expired" | "max views"
+  >("all");
 
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState<number | null>(null);
@@ -97,7 +100,7 @@ const DashboardPage = () => {
       setLinks(refreshed);
       setRepoName("");
       setMaxViews(100);
-      setExpiresIn(3);
+      setExpiresIn(30);
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -134,26 +137,53 @@ const DashboardPage = () => {
   const totalViews = links.reduce((sum, link) => sum + link.view_count, 0);
 
   // To filter links based on search
-  const filteredLinks = links.filter((link) =>
-    link.repo_name.toLowerCase().includes(search.toLowerCase())
-  );
+  const now = new Date();
+
+  const filteredLinks = links
+    .filter((link) =>
+      link.repo_name.toLowerCase().includes(search.toLowerCase())
+    )
+    .filter((link) => {
+      if (filter === "active") return new Date(link.expires_at) > now;
+      if (filter === "expired") return new Date(link.expires_at) <= now;
+      if (filter === "max views") return link.view_count >= link.max_views;
+
+      return true;
+    });
 
   return (
     <div className="min-h-screen bg-white dark:bg-[#0d1117] text-gray-900 dark:text-white px-6 py-12">
-      <h1 className="text-3xl font-bold mb-6">
-        📊 Your Viewer Links Dashboard
-      </h1>
       <div className="flex items-center justify-between">
-        <div className="mb-6">
-          <input
-            type="text"
-            placeholder="Search by repo name..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="w-full sm:w-64 px-4 py-2 border rounded dark:bg-gray-900 dark:border-gray-700"
-          />
-        </div>
+        <h1 className="text-3xl font-bold mb-6">
+          📊 Your Viewer Links Dashboard
+        </h1>
 
+        <div className="mb-6 flex gap-2 flex-wrap">
+          {["all", "active", "expired", "max views"].map((f) => (
+            <button
+              key={f}
+              onClick={() => setFilter(f as any)}
+              className={`px-3 py-1 rounded border ${
+                filter === f
+                  ? "bg-blue-600 text-white"
+                  : "bg-gray-200 dark:bg-gray-700"
+              }`}
+            >
+              {f.charAt(0).toUpperCase() + f.slice(1)}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="flex items-center justify-between">
+        {userInfo && (
+          <div className="text-md text-gray-500 mb-4">
+            Welcome{" "}
+            <span className="font-semibold">
+              @{userInfo.github_username} 👋
+            </span>
+          </div>
+        )}
         <div className="mb-6 flex flex-col sm:flex-row gap-4 text-sm text-gray-700 dark:text-gray-300">
           <div className="bg-gray-100 dark:bg-[#161b22] rounded p-3 shadow-sm">
             <span className="font-semibold text-lg">{totalLinks}</span> total
@@ -164,17 +194,15 @@ const DashboardPage = () => {
             views
           </div>
         </div>
-
-        {userInfo && (
-          <>
-            <div className="text-sm text-gray-500 mb-4">
-              Welcome{" "}
-              <span className="font-semibold">
-                @{userInfo.github_username} 👋
-              </span>
-            </div>
-          </>
-        )}
+        <div className="mb-6">
+          <input
+            type="text"
+            placeholder="Search by repo name..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full sm:w-64 px-4 py-2 border rounded dark:bg-gray-900 dark:border-gray-700"
+          />
+        </div>
       </div>
 
       {error && <p className="text-red-500">{error}</p>}
