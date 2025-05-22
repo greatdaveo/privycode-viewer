@@ -133,6 +133,11 @@ const DashboardPage = () => {
   const totalLinks = links.length;
   const totalViews = links.reduce((sum, link) => sum + link.view_count, 0);
 
+  // To filter links based on search
+  const filteredLinks = links.filter((link) =>
+    link.repo_name.toLowerCase().includes(search.toLowerCase())
+  );
+
   return (
     <div className="min-h-screen bg-white dark:bg-[#0d1117] text-gray-900 dark:text-white px-6 py-12">
       <h1 className="text-3xl font-bold mb-6">
@@ -229,7 +234,7 @@ const DashboardPage = () => {
         <p>No links created yet.</p>
       ) : (
         <div className="grid gap-6">
-          {links.map((link, i) => (
+          {filteredLinks.map((link, i) => (
             <div
               key={i}
               className="p-4 border border-gray-300 dark:border-gray-700 rounded-lg shadow-md bg-gray-50 dark:bg-[#161b22]"
