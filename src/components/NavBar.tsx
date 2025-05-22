@@ -4,8 +4,8 @@ import { Link } from "react-router-dom";
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 const NavBar = () => {
-  const token = new URLSearchParams(window.location.search).get("token") || "";
-//   console.log("token: ", token);
+  const token = localStorage.getItem("github_token");
+  console.log(token);
 
   return (
     <header className="container mx-auto flex justify-between items-center py-6 px-4 animate-fade-in-up">
@@ -17,11 +17,13 @@ const NavBar = () => {
       </Link>
 
       {token ? (
-        <Link to={"/"}>
-          <button className="btn bg-blue-600 text-white rounded-full font-semibold shadow-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition transform hover:scale-105">
-            Logout
-          </button>
-        </Link>
+        <div>
+          <Link to={"/"}>
+            <button className="btn bg-blue-600 text-white rounded-full font-semibold shadow-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition transform hover:scale-105">
+              Logout
+            </button>
+          </Link>
+        </div>
       ) : (
         <a href={`${BACKEND_URL}/github/login`}>
           <button className="btn bg-blue-600 text-white rounded-full font-semibold shadow-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition transform hover:scale-105">

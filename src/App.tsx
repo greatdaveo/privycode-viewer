@@ -8,12 +8,11 @@ import CodeViewerPageWrapper from "./pages/CodeViewerPageWrapper";
 
 export default function App() {
   useEffect(() => {
-    const token =
-      new URLSearchParams(window.location.search).get("token") || "";
+    const token = new URLSearchParams(window.location.search).get("token");
     // console.log("token: ", token);
     if (token) {
       localStorage.setItem("github_token", token);
-      window.history.replaceState({}, "", window.location.pathname);
+      window.history.replaceState({}, "", "/dashboard");
     }
   }, []);
 

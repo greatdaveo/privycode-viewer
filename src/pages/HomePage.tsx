@@ -1,8 +1,12 @@
+import { Link } from "react-router-dom";
 import HomePageImg from "../assets/3AEC1F23-5579-4D09-B1BF-810C835AA3CC.jpeg";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 const HomePage = () => {
+  const token = localStorage.getItem("github_token");
+  // console.log(token);
+
   return (
     <div className="min-h-screen">
       <main className="flex-1 container mx-auto flex flex-col-reverse lg:flex-row items-center gap-12 px-4 py-16">
@@ -20,11 +24,19 @@ const HomePage = () => {
           </p>
 
           <div className="flex justify-center lg:justify-start">
-            <a href={`${BACKEND_URL}/github/login`}>
-              <button className="btn px-10 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-lg font-medium rounded-lg shadow-lg hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition transform hover:scale-105 animate-fade-in-up delay-300">
-                Connect GitHub
-              </button>
-            </a>
+            {token ? (
+              <Link to={"/dashboard"}>
+                <button className="btn px-10 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-lg font-medium rounded-lg shadow-lg hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition transform hover:scale-105 animate-fade-in-up delay-300">
+                  Go to Dashboard
+                </button>
+              </Link>
+            ) : (
+              <a href={`${BACKEND_URL}/github/login`}>
+                <button className="btn px-10 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-lg font-medium rounded-lg shadow-lg hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition transform hover:scale-105 animate-fade-in-up delay-300">
+                  Connect GitHub
+                </button>
+              </a>
+            )}
           </div>
 
           <p className="mt-6 text-sm text-gray-500 dark:text-gray-400 animate-fade-in delay-500">

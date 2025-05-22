@@ -22,6 +22,7 @@ const DashboardPage = () => {
   const [expiresIn, setExpiresIn] = useState(3);
   const [maxViews, setMaxViews] = useState(100);
   const [error, setError] = useState("");
+  const [search, setSearch] = useState("");
 
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState<number | null>(null);
@@ -134,10 +135,19 @@ const DashboardPage = () => {
 
   return (
     <div className="min-h-screen bg-white dark:bg-[#0d1117] text-gray-900 dark:text-white px-6 py-12">
+      <h1 className="text-3xl font-bold mb-6">
+        📊 Your Viewer Links Dashboard
+      </h1>
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold mb-6">
-          📊 Your Viewer Links Dashboard
-        </h1>
+        <div className="mb-6">
+          <input
+            type="text"
+            placeholder="Search by repo name..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full sm:w-64 px-4 py-2 border rounded dark:bg-gray-900 dark:border-gray-700"
+          />
+        </div>
 
         <div className="mb-6 flex flex-col sm:flex-row gap-4 text-sm text-gray-700 dark:text-gray-300">
           <div className="bg-gray-100 dark:bg-[#161b22] rounded p-3 shadow-sm">
