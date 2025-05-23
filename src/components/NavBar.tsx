@@ -5,7 +5,7 @@ const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 const NavBar = () => {
   const token = localStorage.getItem("github_token");
-  console.log(token);
+  // console.log(token);
 
   return (
     <header className="container mx-auto flex justify-between items-center py-6 px-4 animate-fade-in-up">

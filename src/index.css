@@ -5,6 +5,12 @@
   background-color: #242424;
 }
 
+button {
+  cursor: pointer;
+}
+
+/* For ome Screen */
+
 @keyframes fade-in-up {
   from {
     opacity: 0;
