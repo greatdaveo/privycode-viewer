@@ -16,15 +16,7 @@ const NavBar = () => {
         </div>
       </Link>
 
-      {token ? (
-        <div>
-          <Link to={"/"}>
-            <button className="btn bg-blue-600 text-white rounded-full font-semibold shadow-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition transform hover:scale-105">
-              Logout
-            </button>
-          </Link>
-        </div>
-      ) : (
+      {!token && (
         <a href={`${BACKEND_URL}/github/login`}>
           <button className="btn bg-blue-600 text-white rounded-full font-semibold shadow-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition transform hover:scale-105">
             Connect GitHub

@@ -7,6 +7,8 @@ import NavBar from "./components/NavBar";
 import CodeViewerPageWrapper from "./pages/CodeViewerPageWrapper";
 
 export default function App() {
+  const token = localStorage.getItem("github_token");
+
   useEffect(() => {
     const token = new URLSearchParams(window.location.search).get("token");
     // console.log("token: ", token);
@@ -14,7 +16,7 @@ export default function App() {
       localStorage.setItem("github_token", token);
       window.history.replaceState({}, "", "/dashboard");
     }
-  }, []);
+  }, [token]);
 
   return (
     <div className="bg-gradient-to-b from-white to-gray-100 dark:from-[#0d1117] dark:to-[#161b22] flex flex-col text-gray-900 dark:text-gray-100 font-sans min-h-screen">

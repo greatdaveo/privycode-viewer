@@ -25,6 +25,7 @@ const DashboardPage = () => {
   const [expiresIn, setExpiresIn] = useState(30);
   const [maxViews, setMaxViews] = useState(100);
   const [error, setError] = useState("");
+
   // For searching and filtering
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState<
@@ -62,7 +63,7 @@ const DashboardPage = () => {
         const data = await response.json();
         setLinks(data);
       } catch (err: any) {
-        console.log(err);
+        // console.log(err);
         setError(err.message);
       }
     };
@@ -111,7 +112,7 @@ const DashboardPage = () => {
       });
 
       const refreshed = await updated.json();
-      console.log(refreshed);
+      // console.log(refreshed);
 
       setLinks(refreshed);
       setRepoName("");
@@ -162,23 +163,18 @@ const DashboardPage = () => {
 
     // console.log("Editing link ID:", editingLink);
 
-    const editedResponse = await fetch(
-      `${BACKEND_URL}/update-link/${editingLink?.ID}`,
-      {
-        method: "PUT",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
+    await fetch(`${BACKEND_URL}/update-link/${editingLink?.ID}`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
 
-        body: JSON.stringify({
-          expires_in_days: expiresIn,
-          max_views: maxViews,
-        }),
-      }
-    );
-
-    console.log(editedResponse);
+      body: JSON.stringify({
+        expires_in_days: expiresIn,
+        max_views: maxViews,
+      }),
+    });
 
     await refreshDashboard();
     setEditingLink(null);
@@ -187,7 +183,7 @@ const DashboardPage = () => {
   const handleConfirmDelete = async () => {
     if (!deletingLink) return;
 
-    console.log("Deleting link ID:", deletingLink);
+    // console.log("Deleting link ID:", deletingLink);
 
     await fetch(`${BACKEND_URL}/delete-link/${deletingLink.ID}`, {
       method: "DELETE",
