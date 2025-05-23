@@ -42,8 +42,8 @@ PrivyCode is a secure platform that allows developers to share **read-only acces
 
 ```bash
 # Clone the repo
-git clone https://github.com/greatdaveo/privycode-server 
-cd privycode-server
+git clone https://github.com/greatdaveo/privycode-viewer 
+cd privycode-viewer
 npm install
 npm run dev
 ```
