@@ -91,7 +91,15 @@ const DashboardPage = () => {
 
       // console.log(response);
 
-      if (!response.ok) throw new Error("Failed to generate link");
+      if (!response.ok) {
+        const errText = await response.text();
+        if (response.status === 404) {
+          setError(errText);
+        } else {
+          setError(`❌ Failed to create link: ${errText}`);
+        }
+        return;
+      }
 
       await response.json();
       // const data = await response.json();

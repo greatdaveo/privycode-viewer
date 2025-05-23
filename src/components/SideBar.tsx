@@ -56,8 +56,8 @@ const SideBar = ({
       return (
         <div key={item.path}>
           <div
-            className={`cursor-pointer px-2 py-1 rounded transition-all ${
-              selectedFile === item.path ? "bg-blue-200 dark:bg-blue-800" : ""
+            className={`flex items-center gap-2 cursor-pointer px-2 py-1 rounded font-mono text-sm transition-all ${
+              selectedFile === item.path ? "bg-blue-100 dark:bg-blue-800" : ""
             } hover:bg-gray-200 dark:hover:bg-gray-700`}
             style={{ paddingLeft: `${indent * 1.25}rem` }}
             onClick={() => {
@@ -68,7 +68,10 @@ const SideBar = ({
               }
             }}
           >
-            {isFolder ? (isExpanded ? "📂" : "📁") : "📄"} {item.name}
+            <span className="text-gray-500 dark:text-gray-400">
+              {isFolder ? (isExpanded ? "📂" : "📁") : "📄"}
+            </span>
+            <span className="truncate">{item.name}</span>
           </div>
 
           {/* To show the items if folder is expanded */}
@@ -82,8 +85,9 @@ const SideBar = ({
 
   return (
     <aside className="w-64 border-r bg-gray-50 dark:bg-[#121212] overflow-y-auto p-4">
-      <h2 className="font-semibold mb-4 text-lg">📁 Repository Files</h2>
-
+      <h2 className="font-semibold mb-4 text-base text-gray-800 dark:text-gray-100">
+        📁 Repository Files
+      </h2>
       <div className="space-y-1">{renderItems(contents)}</div>
     </aside>
   );
