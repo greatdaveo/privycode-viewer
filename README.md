@@ -1,54 +1,74 @@
-# React + TypeScript + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# 🔐 PrivyCode
 
-Currently, two official plugins are available:
+PrivyCode is a secure platform that allows developers to share **read-only access to their private GitHub repositories** with recruiters or collaborators — without making them public or exposing secrets.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## Expanding the ESLint configuration
+## 🚀 Features
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- 🔗 Generate expiring viewer links to private GitHub repositories
+- 👁️ Allow recruiters to browse your code — no GitHub login required
+- ✂️ Read-only access — no forking or editing
+- 📦 Track view limits and expiration per link
+- 🧑‍💻 Developer dashboard to manage links
+- 🔄 Light/dark theme support
+- 📝 Copy, edit, delete links with ease
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+---
+
+## 🧰 Tech Stack
+
+| Frontend               | Backend              | Database      |
+|------------------------|----------------------|---------------|
+| React + TypeScript     | Go (net/http + GORM) | PostgreSQL    |
+| TailwindCSS            | GitHub OAuth2 API    |               |
+| Monaco Editor          | JWT-style token auth |               |
+
+---
+
+## 🖼️ Live Demo
+[privycode.com](https://privycode.com)
+
+---
+
+## 🔐 Authentication Flow
+
+- Users log in via GitHub OAuth
+- A secure token is stored in localStorage
+- Authenticated users can generate, view, edit, and delete their viewer links
+
+---
+
+```bash
+# Clone the repo
+git clone https://github.com/greatdaveo/privycode-server 
+cd privycode-server
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Make sure to create a `.env` in `client/` with:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+```
+VITE_BACKEND_URL=http://localhost:8080
+```
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+---
+
+## ✅ Future Improvements
+
+* Analytics per link (view history, time opened)
+* AI-powered repo summaries
+* GitHub repo insights integration
+
+---
+
+## 👨‍💻 Developed By
+> Olowomeye David [GitHub](https://github.com/greatdaveo)
+
+---
+
+```
+
 ```
