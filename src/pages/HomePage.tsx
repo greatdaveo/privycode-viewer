@@ -1,11 +1,20 @@
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import HomePageImg from "../assets/3AEC1F23-5579-4D09-B1BF-810C835AA3CC.jpeg";
+import { useEffect } from "react";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 const HomePage = () => {
   const token = localStorage.getItem("github_token");
   // console.log(token);
+  const [searchParams] = useSearchParams();
+  const message = searchParams.get("message");
+
+  useEffect(() => {
+    if (message === "connect_github") {
+      alert("Please connect your GitHub to access your dashboard!");
+    }
+  }, [message]);
 
   return (
     <div className="min-h-screen">
