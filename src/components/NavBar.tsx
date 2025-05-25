@@ -18,7 +18,7 @@ const NavBar = () => {
 
       {token ? (
         <Link to="/dashboard">
-          <button className="btn bg-green-600 text-white rounded-full font-semibold shadow-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition transform hover:scale-105">
+          <button className="btn bg-blue-600 text-white rounded-full font-semibold shadow-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-green-500 transition transform hover:scale-105">
             View Dashboard
           </button>
         </Link>
