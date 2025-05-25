@@ -16,7 +16,6 @@ export default function App() {
       localStorage.removeItem("github_token");
       localStorage.setItem("github_token", token);
       // window.history.replaceState({}, "", "/dashboard");
-      window.location.reload();
     }
   }, []);
 
