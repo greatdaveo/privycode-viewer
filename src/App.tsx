@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import NavBar from "./components/NavBar";
 import CodeViewerPageWrapper from "./pages/CodeViewerPageWrapper";
 import PageNotFound from "./pages/PageNotFound";
-import ProtectedRoute from "./components/ProtectedRoute";
+// import ProtectedRoute from "./components/ProtectedRoute";
 
 export default function App() {
   useEffect(() => {
@@ -18,7 +18,7 @@ export default function App() {
       if (match) {
         token = match[1];
       }
-      
+
       if (token) {
         localStorage.setItem("github_token", token);
       }
@@ -34,14 +34,15 @@ export default function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
 
-        <Route
+        {/* <Route
           path="/dashboard"
           element={
             <ProtectedRoute>
               <DashboardPage />
             </ProtectedRoute>
           }
-        />
+        /> */}
+        <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/view/:token" element={<CodeViewerPageWrapper />} />
         <Route path="*" element={<PageNotFound />} />
       </Routes>
