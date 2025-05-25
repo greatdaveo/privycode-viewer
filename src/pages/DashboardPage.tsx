@@ -47,9 +47,10 @@ const DashboardPage = () => {
     const fetchLinks = async () => {
       try {
         const response = await fetch(`${BACKEND_URL}/dashboard`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          // headers: {
+          //   Authorization: `Bearer ${token}`,
+          // },
+          credentials: "include",
         });
 
         // console.log(response);
@@ -76,15 +77,17 @@ const DashboardPage = () => {
     e.preventDefault();
     setLoading(true);
 
+    const cleanedRepoName = repoName.trim();
+
     try {
       const response = await fetch(`${BACKEND_URL}/generate-viewer-link`, {
         method: "POST",
+        credentials: "include",
         headers: {
-          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          repo_name: repoName,
+          repo_name: cleanedRepoName,
           expires_in_days: expiresIn,
           max_views: maxViews,
         }),
@@ -108,7 +111,8 @@ const DashboardPage = () => {
 
       // To re-fetch links
       const updated = await fetch(`${BACKEND_URL}/dashboard`, {
-        headers: { Authorization: `Bearer ${token}` },
+        // headers: { Authorization: `Bearer ${token}` },
+        credentials: "include",
       });
 
       const refreshed = await updated.json();
@@ -130,7 +134,8 @@ const DashboardPage = () => {
     const fetchUserInfo = async () => {
       try {
         const response = await fetch(`${BACKEND_URL}/me`, {
-          headers: { Authorization: `Bearer ${token}` },
+          // headers: { Authorization: `Bearer ${token}` },
+          credentials: "include",
         });
 
         if (!response.ok) {
@@ -152,7 +157,8 @@ const DashboardPage = () => {
   // For editing and deleting
   const refreshDashboard = async () => {
     const res = await fetch(`${BACKEND_URL}/dashboard`, {
-      headers: { Authorization: `Bearer ${token}` },
+      // headers: { Authorization: `Bearer ${token}` },
+      credentials: "include",
     });
     const data = await res.json();
     setLinks(data);
@@ -165,8 +171,9 @@ const DashboardPage = () => {
 
     await fetch(`${BACKEND_URL}/update-link/${editingLink?.ID}`, {
       method: "PUT",
+      credentials: "include",
       headers: {
-        Authorization: `Bearer ${token}`,
+        // Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
 
@@ -187,8 +194,9 @@ const DashboardPage = () => {
 
     await fetch(`${BACKEND_URL}/delete-link/${deletingLink.ID}`, {
       method: "DELETE",
+      credentials: "include",
       headers: {
-        Authorization: `Bearer ${token}`,
+        // Authorization: `Bearer ${token}`,
       },
     });
 

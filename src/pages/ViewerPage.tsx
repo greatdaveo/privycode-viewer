@@ -117,7 +117,7 @@ export function ViewerPage({ token }: { token: string }) {
     <>
       <header className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-[#161b22]">
         <h1 className="text-xl font-semibold tracking-tight">
-          Hello 👋, you are currently viewing a GitHub private repository
+          Private GitHub Repository – Read-only view
         </h1>
 
         {userInfo && (

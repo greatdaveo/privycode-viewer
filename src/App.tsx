@@ -9,16 +9,22 @@ import PageNotFound from "./pages/PageNotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 export default function App() {
-  const token = localStorage.getItem("github_token");
-
   useEffect(() => {
-    const token = new URLSearchParams(window.location.search).get("token");
+    let token = new URLSearchParams(window.location.search).get("token");
     // console.log("token: ", token);
     if (token) {
-      localStorage.setItem("github_token", token);
-      window.history.replaceState({}, "", "/dashboard");
+      const match = document.cookie.match(/github_token=([^;]+)/);
+
+      if (match) {
+        token = match[1];
+      }
+      if (token) {
+        localStorage.setItem("github_token", token);
+      }
+      // localStorage.setItem("github_token", token);
+      // window.history.replaceState({}, "", "/dashboard");
     }
-  }, [token]);
+  }, []);
 
   return (
     <div className="bg-gradient-to-b from-white to-gray-100 dark:from-[#0d1117] dark:to-[#161b22] flex flex-col text-gray-900 dark:text-gray-100 font-sans min-h-screen">
