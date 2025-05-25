@@ -18,6 +18,7 @@ export default function App() {
       if (match) {
         token = match[1];
       }
+      
       if (token) {
         localStorage.setItem("github_token", token);
       }

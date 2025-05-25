@@ -1,32 +1,19 @@
 import { Link, useSearchParams } from "react-router-dom";
 import HomePageImg from "../assets/3AEC1F23-5579-4D09-B1BF-810C835AA3CC.jpeg";
 import { useEffect, useState } from "react";
+import useAuth from "../hooks/useAuth";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 const HomePage = () => {
   const [searchParams] = useSearchParams();
   const message = searchParams.get("message");
-  const [authenticated, setAuthenticated] = useState(false);
+  const { authenticated } = useAuth();
 
   useEffect(() => {
     if (message === "connect_github") {
       alert("Please connect your GitHub to access your dashboard!");
     }
-
-    const checkAuth = async () => {
-      try {
-        const res = await fetch(`${BACKEND_URL}/me`, {
-          credentials: "include",
-        });
-
-        setAuthenticated(res.ok);
-      } catch (err) {
-        setAuthenticated(false);
-      }
-    };
-
-    checkAuth();
   }, [message]);
 
   return (
