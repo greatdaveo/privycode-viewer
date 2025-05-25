@@ -5,10 +5,8 @@ import useAuth from "../hooks/useAuth";
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 const NavBar = () => {
-  // const token = localStorage.getItem("github_token");
+  const token = localStorage.getItem("github_token");
   // console.log(token);
-
-  const { authenticated } = useAuth();
 
   return (
     <header className="container mx-auto flex justify-between items-center py-6 px-4 animate-fade-in-up">
@@ -19,10 +17,10 @@ const NavBar = () => {
         </div>
       </Link>
 
-      {authenticated ? (
+      {token ? (
         <Link to="/dashboard">
           <button className="btn bg-green-600 text-white rounded-full font-semibold shadow-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition transform hover:scale-105">
-            Dashboard
+            View Dashboard
           </button>
         </Link>
       ) : (

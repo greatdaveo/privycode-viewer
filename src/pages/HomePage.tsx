@@ -1,14 +1,13 @@
 import { Link, useSearchParams } from "react-router-dom";
 import HomePageImg from "../assets/3AEC1F23-5579-4D09-B1BF-810C835AA3CC.jpeg";
 import { useEffect } from "react";
-import useAuth from "../hooks/useAuth";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 const HomePage = () => {
   const [searchParams] = useSearchParams();
   const message = searchParams.get("message");
-  const { authenticated } = useAuth();
+  const token = localStorage.getItem("github_token");
 
   useEffect(() => {
     if (message === "connect_github") {
@@ -33,7 +32,7 @@ const HomePage = () => {
           </p>
 
           <div className="flex justify-center lg:justify-start">
-            {authenticated ? (
+            {token ? (
               <Link to={"/dashboard"}>
                 <button className="btn px-10 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-lg font-medium rounded-lg shadow-lg hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition transform hover:scale-105 animate-fade-in-up delay-300">
                   Go to Dashboard

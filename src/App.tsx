@@ -10,19 +10,10 @@ import PageNotFound from "./pages/PageNotFound";
 
 export default function App() {
   useEffect(() => {
-    let token = new URLSearchParams(window.location.search).get("token");
+    const token = new URLSearchParams(window.location.search).get("token");
     // console.log("token: ", token);
     if (token) {
-      const match = document.cookie.match(/github_token=([^;]+)/);
-
-      if (match) {
-        token = match[1];
-      }
-
-      if (token) {
-        localStorage.setItem("github_token", token);
-      }
-      // localStorage.setItem("github_token", token);
+      localStorage.setItem("github_token", token);
       // window.history.replaceState({}, "", "/dashboard");
     }
   }, []);
