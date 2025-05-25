@@ -71,7 +71,7 @@ const DashboardPage = () => {
     fetchLinks();
   }, [token]);
 
-  // Tp create the viewer link
+  // To create the viewer link
   const handleCreateLink = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -81,8 +81,8 @@ const DashboardPage = () => {
     try {
       const response = await fetch(`${BACKEND_URL}/generate-viewer-link`, {
         method: "POST",
-
         headers: {
+          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
