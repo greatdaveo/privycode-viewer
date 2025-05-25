@@ -13,6 +13,7 @@ type ViewerLink = {
 };
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+const token = localStorage.getItem("github_token");
 
 const DashboardPage = () => {
   const [userInfo, setUserInfo] = useState<{
@@ -39,7 +40,6 @@ const DashboardPage = () => {
   const [editingLink, setEditingLink] = useState<ViewerLink | null>(null);
   const [deletingLink, setDeletingLink] = useState<ViewerLink | null>(null);
 
-  const token = localStorage.getItem("github_token");
   // console.log(token);
 
   // To fetch the viewer links on load
