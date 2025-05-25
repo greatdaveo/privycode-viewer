@@ -1,6 +1,5 @@
 import { Code } from "lucide-react";
 import { Link } from "react-router-dom";
-import useAuth from "../hooks/useAuth";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
