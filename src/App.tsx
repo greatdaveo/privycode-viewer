@@ -8,36 +8,15 @@ import CodeViewerPageWrapper from "./pages/CodeViewerPageWrapper";
 import PageNotFound from "./pages/PageNotFound";
 // import ProtectedRoute from "./components/ProtectedRoute";
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
-
 export default function App() {
   useEffect(() => {
-    const checkToken = async () => {
-      const token = localStorage.getItem("github_token");
-      if (!token) return;
-
-      try {
-        const res = await fetch(`${BACKEND_URL}/me`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        if (!res.ok) {
-          // if token is invalid or expired
-          localStorage.removeItem("github_token");
-          alert("Your GitHub session expired. Please reconnect.");
-          window.location.href = "/";
-        }
-      } catch (err) {
-        // if there is network or unexpected error
-        localStorage.removeItem("github_token");
-        alert("Authentication error. Please reconnect your GitHub.");
-        window.location.href = "/";
-      }
-    };
-
-    checkToken();
+    const token = new URLSearchParams(window.location.search).get("token");
+    // console.log("token: ", token);
+    if (token) {
+      localStorage.removeItem("github_token");
+      localStorage.setItem("github_token", token);
+      // window.history.replaceState({}, "", "/dashboard");
+    }
   }, []);
 
   return (
