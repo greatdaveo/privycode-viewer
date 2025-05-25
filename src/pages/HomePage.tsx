@@ -1,6 +1,6 @@
 import { Link, useSearchParams } from "react-router-dom";
 import HomePageImg from "../assets/3AEC1F23-5579-4D09-B1BF-810C835AA3CC.jpeg";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import useAuth from "../hooks/useAuth";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
