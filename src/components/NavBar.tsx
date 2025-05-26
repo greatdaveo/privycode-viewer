@@ -16,13 +16,21 @@ const NavBar = () => {
         </div>
       </Link>
 
-      {token ? (
+      {/* {token ? (
         <Link to="/dashboard">
           <button className="btn bg-blue-600 text-white rounded-full font-semibold shadow-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition transform hover:scale-105">
             View Dashboard
           </button>
         </Link>
       ) : (
+        <a href={`${BACKEND_URL}/github/login`}>
+          <button className="btn bg-blue-600 text-white rounded-full font-semibold shadow-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition transform hover:scale-105">
+            Connect GitHub
+          </button>
+        </a>
+      )} */}
+
+      {!token && (
         <a href={`${BACKEND_URL}/github/login`}>
           <button className="btn bg-blue-600 text-white rounded-full font-semibold shadow-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition transform hover:scale-105">
             Connect GitHub
