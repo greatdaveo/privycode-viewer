@@ -1,31 +1,39 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import "./App.css";
 import HomePage from "./pages/HomePage";
 import DashboardPage from "./pages/DashboardPage";
-import { useEffect } from "react";
+// import { useEffect } from "react";
 import NavBar from "./components/NavBar";
 import CodeViewerPageWrapper from "./pages/CodeViewerPageWrapper";
 import PageNotFound from "./pages/PageNotFound";
+import { useEffect, useState } from "react";
+import { Loader } from "lucide-react";
 // import ProtectedRoute from "./components/ProtectedRoute";
 
+// const token = localStorage.getItem("github_token");
+localStorage.removeItem("github_token");
+
 export default function App() {
+  const [_, setToken] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+  const location = useLocation();
+
   useEffect(() => {
     const urlToken = new URLSearchParams(window.location.search).get("token");
     const localToken = localStorage.getItem("github_token");
-    const hasReset = localStorage.getItem("has_reset_token");
 
     if (urlToken) {
       localStorage.setItem("github_token", urlToken);
-      localStorage.removeItem("has_reset_token"); // To reset the flag after successful login
+      setToken(urlToken);
       window.history.replaceState({}, "", "/dashboard");
-    } else if (localToken && !hasReset) {
-      // First time seeing an old token, clear and force re-login
-      alert("Your session has expired. Please reconnect your GitHub account.");
-      localStorage.removeItem("github_token");
-      localStorage.setItem("has_reset_token", "true"); // Prevent repeated redirects
-      window.location.href = import.meta.env.VITE_BACKEND_URL + "/github/login";
+    } else if (localToken) {
+      setToken(localToken);
     }
-  }, []);
+
+    setLoading(false);
+  }, [location]);
+
+  if (loading) return <Loader />;
 
   return (
     <div className="bg-gradient-to-b from-white to-gray-100 dark:from-[#0d1117] dark:to-[#161b22] flex flex-col text-gray-900 dark:text-gray-100 font-sans min-h-screen">

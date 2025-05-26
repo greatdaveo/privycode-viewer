@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import DeleteModal from "../components/DeleteModal";
 import EditModal from "../components/EditModal";
 import { Search } from "lucide-react";
+import Loader from "../components/Loader";
 
 type ViewerLink = {
   ID: number;
@@ -13,7 +14,7 @@ type ViewerLink = {
 };
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
-const token = localStorage.getItem("github_token");
+// const token = localStorage.getItem("github_token");
 
 const DashboardPage = () => {
   const [userInfo, setUserInfo] = useState<{
@@ -26,6 +27,13 @@ const DashboardPage = () => {
   const [expiresIn, setExpiresIn] = useState(30);
   const [maxViews, setMaxViews] = useState(100);
   const [error, setError] = useState("");
+
+  const [token, setToken] = useState<string | null>(null);
+
+  useEffect(() => {
+    const stored = localStorage.getItem("github_token");
+    setToken(stored);
+  }, []);
 
   // For searching and filtering
   const [search, setSearch] = useState("");
@@ -44,6 +52,8 @@ const DashboardPage = () => {
 
   // To fetch the viewer links on load
   useEffect(() => {
+    if (!token) return;
+
     const fetchLinks = async () => {
       try {
         const response = await fetch(`${BACKEND_URL}/dashboard`, {
@@ -53,6 +63,22 @@ const DashboardPage = () => {
         });
 
         // console.log(response);
+
+        if (token === null) {
+          return <Loader />;
+        }
+
+        // if (!token) {
+        // window.location.href = `${BACKEND_URL}/github/login`;
+        //   return null; // to prevent rendering anything else
+        // }
+
+        if (response.status === 401) {
+          localStorage.removeItem("github_token");
+          alert("Session expired. Please reconnect your GitHub.");
+          window.location.href = `${BACKEND_URL}/github/login`;
+          return;
+        }
 
         if (!response.ok) {
           const text = await response.text(); // just in case
@@ -129,11 +155,20 @@ const DashboardPage = () => {
 
   // To fetch user info
   useEffect(() => {
+    if (!token) return;
+
     const fetchUserInfo = async () => {
       try {
         const response = await fetch(`${BACKEND_URL}/me`, {
           headers: { Authorization: `Bearer ${token}` },
         });
+
+        if (response.status === 401) {
+          localStorage.removeItem("github_token");
+          alert("Session expired. Please reconnect your GitHub.");
+          window.location.href = `${BACKEND_URL}/github/login`;
+          return;
+        }
 
         if (!response.ok) {
           const errorText = await response.text();
@@ -192,7 +227,7 @@ const DashboardPage = () => {
       method: "DELETE",
 
       headers: {
-        // Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       },
     });
 
