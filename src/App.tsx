@@ -10,18 +10,19 @@ import PageNotFound from "./pages/PageNotFound";
 
 // const token = localStorage.getItem("github_token");
 localStorage.removeItem("github_token");
+const token = new URLSearchParams(window.location.search).get("token");
+
+useEffect(() => {
+  // const token = new URLSearchParams(window.location.search).get("token");
+  // console.log("token: ", token);
+  if (token) {
+    // localStorage.removeItem("github_token");
+    localStorage.setItem("github_token", token);
+    // window.history.replaceState({}, "", "/dashboard");
+  }
+}, [token]);
 
 export default function App() {
-  useEffect(() => {
-    const token = new URLSearchParams(window.location.search).get("token");
-    // console.log("token: ", token);
-    if (token) {
-      localStorage.removeItem("github_token");
-      localStorage.setItem("github_token", token);
-      // window.history.replaceState({}, "", "/dashboard");
-    }
-  }, []);
-
   return (
     <div className="bg-gradient-to-b from-white to-gray-100 dark:from-[#0d1117] dark:to-[#161b22] flex flex-col text-gray-900 dark:text-gray-100 font-sans min-h-screen">
       <NavBar />
