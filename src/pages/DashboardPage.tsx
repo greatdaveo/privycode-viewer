@@ -120,6 +120,10 @@ const DashboardPage = () => {
 
       // console.log(response);
 
+      if (token === null) {
+        return <Loader />;
+      }
+
       if (!response.ok) {
         const errText = await response.text();
         if (response.status === 404) {
