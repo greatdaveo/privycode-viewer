@@ -12,16 +12,17 @@ export default function App() {
   useEffect(() => {
     const urlToken = new URLSearchParams(window.location.search).get("token");
     const localToken = localStorage.getItem("github_token");
+    const hasReset = localStorage.getItem("has_reset_token");
 
     if (urlToken) {
-      // To clear old token before storing the new one
-      localStorage.removeItem("github_token");
       localStorage.setItem("github_token", urlToken);
+      localStorage.removeItem("has_reset_token"); // To reset the flag after successful login
       window.history.replaceState({}, "", "/dashboard");
-    } else if (localToken) {
-      // Token exists but not from a fresh GitHub auth → force reconnect
+    } else if (localToken && !hasReset) {
+      // First time seeing an old token, clear and force re-login
       alert("Your session has expired. Please reconnect your GitHub account.");
       localStorage.removeItem("github_token");
+      localStorage.setItem("has_reset_token", "true"); // Prevent repeated redirects
       window.location.href = import.meta.env.VITE_BACKEND_URL + "/github/login";
     }
   }, []);
