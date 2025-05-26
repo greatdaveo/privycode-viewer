@@ -8,20 +8,24 @@ import CodeViewerPageWrapper from "./pages/CodeViewerPageWrapper";
 import PageNotFound from "./pages/PageNotFound";
 // import ProtectedRoute from "./components/ProtectedRoute";
 
-// const token = localStorage.getItem("github_token");
-localStorage.removeItem("github_token");
-
-useEffect(() => {
-  const token = new URLSearchParams(window.location.search).get("token");
-  // console.log("token: ", token);
-  if (token) {
-    localStorage.removeItem("github_token");
-    localStorage.setItem("github_token", token);
-    // window.history.replaceState({}, "", "/dashboard");
-  }
-}, []);
-
 export default function App() {
+  useEffect(() => {
+    const urlToken = new URLSearchParams(window.location.search).get("token");
+    const localToken = localStorage.getItem("github_token");
+
+    if (urlToken) {
+      // To clear old token before storing the new one
+      localStorage.removeItem("github_token");
+      localStorage.setItem("github_token", urlToken);
+      window.history.replaceState({}, "", "/dashboard");
+    } else if (localToken) {
+      // Token exists but not from a fresh GitHub auth → force reconnect
+      alert("Your session has expired. Please reconnect your GitHub account.");
+      localStorage.removeItem("github_token");
+      window.location.href = import.meta.env.VITE_BACKEND_URL + "/github/login";
+    }
+  }, []);
+
   return (
     <div className="bg-gradient-to-b from-white to-gray-100 dark:from-[#0d1117] dark:to-[#161b22] flex flex-col text-gray-900 dark:text-gray-100 font-sans min-h-screen">
       <NavBar />
