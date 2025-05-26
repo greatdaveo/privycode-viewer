@@ -10,17 +10,16 @@ import PageNotFound from "./pages/PageNotFound";
 
 // const token = localStorage.getItem("github_token");
 localStorage.removeItem("github_token");
-const token = new URLSearchParams(window.location.search).get("token");
 
 useEffect(() => {
-  // const token = new URLSearchParams(window.location.search).get("token");
+  const token = new URLSearchParams(window.location.search).get("token");
   // console.log("token: ", token);
   if (token) {
-    // localStorage.removeItem("github_token");
+    localStorage.removeItem("github_token");
     localStorage.setItem("github_token", token);
     // window.history.replaceState({}, "", "/dashboard");
   }
-}, [token]);
+}, []);
 
 export default function App() {
   return (
