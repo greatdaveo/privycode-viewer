@@ -8,7 +8,8 @@ import CodeViewerPageWrapper from "./pages/CodeViewerPageWrapper";
 import PageNotFound from "./pages/PageNotFound";
 // import ProtectedRoute from "./components/ProtectedRoute";
 
-const token = localStorage.getItem("github_token");
+// const token = localStorage.getItem("github_token");
+localStorage.removeItem("github_token");
 
 export default function App() {
   useEffect(() => {
@@ -19,7 +20,7 @@ export default function App() {
       localStorage.setItem("github_token", token);
       // window.history.replaceState({}, "", "/dashboard");
     }
-  }, [token]);
+  }, []);
 
   return (
     <div className="bg-gradient-to-b from-white to-gray-100 dark:from-[#0d1117] dark:to-[#161b22] flex flex-col text-gray-900 dark:text-gray-100 font-sans min-h-screen">
