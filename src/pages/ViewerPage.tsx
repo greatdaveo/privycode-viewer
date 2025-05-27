@@ -7,6 +7,7 @@ import {
 import { GitHubContentItem } from "../types/github";
 import SideBar from "../components/SideBar";
 import MonacoEditor from "@monaco-editor/react";
+import ErrorPage from "./ErrorPage";
 
 export function ViewerPage({ token }: { token: string }) {
   const [contents, setContents] = useState<GitHubContentItem[]>([]);
@@ -111,8 +112,45 @@ export function ViewerPage({ token }: { token: string }) {
     };
   }, []);
 
-  if (error) return <div className="text-red-600">Error: {error}</div>;
+  if (error.toLowerCase().includes("deleted")) {
+    return (
+      <ErrorPage
+        title="Link Deleted"
+        message="This viewer link has been deleted by the user."
+      />
+    );
+  }
 
+  if (error.toLowerCase().includes("expired")) {
+    return (
+      <ErrorPage
+        title="Link Expired"
+        message="This viewer link has expired. Please request a new one."
+      />
+    );
+  }
+
+  if (error.toLowerCase().includes("limit")) {
+    return (
+      <ErrorPage
+        title="View Limit Reached"
+        message="This viewer link has exceeded the maximum number of allowed views."
+      />
+    );
+  }
+
+  if (error.toLowerCase().includes("invalid")) {
+    return (
+      <ErrorPage
+        title="Invalid Link"
+        message="This viewer link is not valid or may have been removed."
+      />
+    );
+  }
+
+  if (error) {
+    return <ErrorPage title="Error" message={error} />;
+  }
   return (
     <>
       <header className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-[#161b22]">
