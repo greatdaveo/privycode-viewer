@@ -8,6 +8,7 @@ import CodeViewerPageWrapper from "./pages/CodeViewerPageWrapper";
 import PageNotFound from "./pages/PageNotFound";
 import { useEffect, useState } from "react";
 import { Loader } from "lucide-react";
+import ProtectedRoute from "./components/ProtectedRoute";
 // import ProtectedRoute from "./components/ProtectedRoute";
 
 // const token = localStorage.getItem("github_token");
@@ -42,15 +43,15 @@ export default function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
 
-        {/* <Route
+        <Route
           path="/dashboard"
           element={
             <ProtectedRoute>
               <DashboardPage />
             </ProtectedRoute>
           }
-        /> */}
-        <Route path="/dashboard" element={<DashboardPage />} />
+        />
+        {/* <Route path="/dashboard" element={<DashboardPage />} /> */}
         <Route path="/view/:token" element={<CodeViewerPageWrapper />} />
         <Route path="*" element={<PageNotFound />} />
       </Routes>

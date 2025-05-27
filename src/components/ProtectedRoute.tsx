@@ -1,11 +1,18 @@
-import { JSX } from "react";
+import { JSX, useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
-import useAuth from "../hooks/useAuth";
+// import useAuth from "../hooks/useAuth";
 
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
-  const { authenticated, checked } = useAuth();
+  const [checking, setChecking] = useState(true);
+  const [token, setToken] = useState<string | null>(null);
 
-  if (!checked) {
+  useEffect(() => {
+    const storedToken = localStorage.getItem("github_token");
+    setToken(storedToken);
+    setChecking(false);
+  }, []);
+
+  if (checking) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white dark:bg-[#0d1117] text-gray-800 dark:text-white">
         <div className="flex flex-col items-center space-y-4">
@@ -16,7 +23,7 @@ const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
     );
   }
 
-  if (!authenticated) {
+  if (!token) {
     return <Navigate to="/?message=connect_github" replace />;
   }
 
