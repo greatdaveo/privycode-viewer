@@ -14,7 +14,7 @@ const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
     setChecking(false);
   }, [checking, token]);
 
-  if (checking && !token) {
+  if (!token) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white dark:bg-[#0d1117] text-gray-800 dark:text-white">
         <div className="flex flex-col items-center space-y-4">
