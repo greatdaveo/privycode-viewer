@@ -10,7 +10,7 @@ const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
 
   useEffect(() => {
     setChecking(true);
-    const storedToken = localStorage?.getItem("github_token");
+    const storedToken = localStorage.getItem("github_token");
 
     if (storedToken) {
       setToken(storedToken);
