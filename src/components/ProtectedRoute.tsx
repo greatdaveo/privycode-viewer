@@ -3,19 +3,14 @@ import { Navigate } from "react-router-dom";
 // import useAuth from "../hooks/useAuth";
 
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
-  const [checking, setChecking] = useState(false);
+  const [checking, setChecking] = useState(true);
   const [token, setToken] = useState<string | null>(null);
 
   // const token = localStorage?.getItem("github_token");
 
   useEffect(() => {
-    setChecking(true);
     const storedToken = localStorage.getItem("github_token");
-
-    if (storedToken) {
-      setToken(storedToken);
-    }
-
+    setToken(storedToken);
     setChecking(false);
   }, []);
 
