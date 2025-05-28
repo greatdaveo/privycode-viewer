@@ -11,7 +11,7 @@ import { Loader } from "lucide-react";
 import ProtectedRoute from "./components/ProtectedRoute";
 // import ProtectedRoute from "./components/ProtectedRoute";
 
-// const token = localStorage.getItem("github_token");
+localStorage.removeItem("github_token");
 
 export default function App() {
   const [_, setToken] = useState<string | null>(null);
@@ -21,10 +21,6 @@ export default function App() {
   useEffect(() => {
     const urlToken = new URLSearchParams(window.location.search).get("token");
     const localToken = localStorage.getItem("github_token");
-    
-    if (localToken) {
-      localStorage.removeItem("github_token");
-    }
 
     if (urlToken) {
       localStorage.setItem("github_token", urlToken);
