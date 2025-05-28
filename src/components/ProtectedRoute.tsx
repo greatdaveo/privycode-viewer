@@ -12,7 +12,7 @@ const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
     const storedToken = localStorage.getItem("github_token");
     setToken(storedToken);
     setChecking(false);
-  }, []);
+  }, [checking, token]);
 
   if (checking && !token) {
     return (
