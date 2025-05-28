@@ -10,10 +10,10 @@ const HomePage = () => {
   const token = localStorage.getItem("github_token");
 
   useEffect(() => {
-    if (message === "connect_github") {
+    if (!token && message === "connect_github") {
       alert("Please connect your GitHub to access your dashboard!");
     }
-  }, [message]);
+  }, [message, token]);
 
   return (
     <div className="min-h-screen">
