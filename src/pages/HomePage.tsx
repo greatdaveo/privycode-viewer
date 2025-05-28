@@ -10,7 +10,7 @@ const HomePage = () => {
   const token = localStorage.getItem("github_token");
 
   useEffect(() => {
-    if (!token && message === "connect_github") {
+    if (message === "connect_github") {
       alert("Please connect your GitHub to access your dashboard!");
     }
   }, [message, token]);

@@ -17,7 +17,7 @@ const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
     }
 
     setChecking(false);
-  }, [token]);
+  }, []);
 
   if (checking && !token) {
     return (
