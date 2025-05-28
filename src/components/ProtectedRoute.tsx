@@ -3,8 +3,10 @@ import { Navigate } from "react-router-dom";
 // import useAuth from "../hooks/useAuth";
 
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
-  const [checking, setChecking] = useState(true);
+  const [checking, setChecking] = useState(false);
   const [token, setToken] = useState<string | null>(null);
+
+  // const token = localStorage?.getItem("github_token");
 
   useEffect(() => {
     setChecking(true);
@@ -13,7 +15,7 @@ const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
     setChecking(false);
   }, [token]);
 
-  if (checking) {
+  if (checking && !token) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white dark:bg-[#0d1117] text-gray-800 dark:text-white">
         <div className="flex flex-col items-center space-y-4">
