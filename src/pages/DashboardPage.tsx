@@ -73,12 +73,12 @@ const DashboardPage = () => {
         //   return null; // to prevent rendering anything else
         // }
 
-        if (response.status === 401) {
-          localStorage.removeItem("github_token");
-          alert("Session expired. Please reconnect your GitHub.");
-          window.location.href = `${BACKEND_URL}/github/login`;
-          return;
-        }
+        // if (response.status === 401) {
+        //   localStorage.removeItem("github_token");
+        //   alert("Session expired. Please reconnect your GitHub.");
+        //   window.location.href = `${BACKEND_URL}/github/login`;
+        //   return;
+        // }
 
         if (!response.ok) {
           const text = await response.text(); // just in case
@@ -167,12 +167,12 @@ const DashboardPage = () => {
           headers: { Authorization: `Bearer ${token}` },
         });
 
-        if (response.status === 401) {
-          localStorage.removeItem("github_token");
-          alert("Session expired. Please reconnect your GitHub.");
-          window.location.href = `${BACKEND_URL}/github/login`;
-          return;
-        }
+        // if (response.status === 401) {
+        //   localStorage.removeItem("github_token");
+        //   alert("Session expired. Please reconnect your GitHub.");
+        //   window.location.href = `${BACKEND_URL}/github/login`;
+        //   return;
+        // }
 
         if (!response.ok) {
           const errorText = await response.text();
