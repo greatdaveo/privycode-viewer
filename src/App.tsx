@@ -12,7 +12,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 // import ProtectedRoute from "./components/ProtectedRoute";
 
 // const token = localStorage.getItem("github_token");
-// localStorage.removeItem("github_token");
+localStorage.removeItem("github_token");
 
 export default function App() {
   const [_, setToken] = useState<string | null>(null);

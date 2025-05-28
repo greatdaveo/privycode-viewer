@@ -9,8 +9,6 @@ const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
   // const token = localStorage?.getItem("github_token");
 
   useEffect(() => {
-    localStorage.removeItem("github_token");
-
     const storedToken = localStorage.getItem("github_token");
     setToken(storedToken);
     setChecking(false);
