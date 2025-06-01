@@ -3,37 +3,38 @@ import DeleteModal from "../components/DeleteModal";
 import EditModal from "../components/EditModal";
 import { Search } from "lucide-react";
 import Loader from "../components/Loader";
-
-type ViewerLink = {
-  ID: number;
-  repo_name: string;
-  token: string;
-  expires_at: string;
-  max_views: number;
-  view_count: number;
-};
-
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
-// const token = localStorage.getItem("github_token");
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../redux/store";
+import { fetchUserSlice } from "../redux/auth/authSlice";
+import {
+  createViewerLinkSlice,
+  deleteViewerLinkSlice,
+  fetchViewerLinksSlice,
+  resetViewerLinksState,
+  updateViewerLinkSlice,
+} from "../redux/links/viewerLinksSlice";
+import ErrorMessage from "../components/ErrorMessage";
+import { ViewerLink as ReduxViewerLink } from "../redux/links/viewerLinksSlice";
 
 const DashboardPage = () => {
-  const [userInfo, setUserInfo] = useState<{
-    github_username: string;
-    email: string;
-  } | null>(null);
-
-  const [links, setLinks] = useState<ViewerLink[]>([]);
   const [repoName, setRepoName] = useState("");
   const [expiresIn, setExpiresIn] = useState(30);
   const [maxViews, setMaxViews] = useState(100);
   const [error, setError] = useState("");
 
-  const [token, setToken] = useState<string | null>(null);
-
-  useEffect(() => {
-    const stored = localStorage.getItem("github_token");
-    setToken(stored);
-  }, []);
+  const dispatch = useDispatch<AppDispatch>();
+  const {
+    user,
+    isLoading: authLoading,
+    isError: authError,
+    message: authMessage,
+  } = useSelector((state: RootState) => state.auth);
+  const {
+    links,
+    isLoading: linksLoading,
+    isError: linksError,
+    message: linksMessage,
+  } = useSelector((state: RootState) => state.viewerLinks);
 
   // For searching and filtering
   const [search, setSearch] = useState("");
@@ -41,202 +42,77 @@ const DashboardPage = () => {
     "all" | "active" | "expired" | "max views"
   >("all");
 
-  const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState<number | null>(null);
 
   // For editing and deleting of links
-  const [editingLink, setEditingLink] = useState<ViewerLink | null>(null);
-  const [deletingLink, setDeletingLink] = useState<ViewerLink | null>(null);
-
-  // console.log(token);
+  const [editingLink, setEditingLink] = useState<ReduxViewerLink | null>(null);
+  const [deletingLink, setDeletingLink] = useState<ReduxViewerLink | null>(
+    null
+  );
 
   // To fetch the viewer links on load
   useEffect(() => {
-    if (!token) return;
+    dispatch(fetchViewerLinksSlice());
 
-    const fetchLinks = async () => {
-      try {
-        const response = await fetch(`${BACKEND_URL}/dashboard`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        // console.log(response);
-
-        if (token === null) {
-          return <Loader />;
-        }
-
-        // if (!token) {
-        // window.location.href = `${BACKEND_URL}/github/login`;
-        //   return null; // to prevent rendering anything else
-        // }
-
-        // if (response.status === 401) {
-        //   localStorage.removeItem("github_token");
-        //   alert("Session expired. Please reconnect your GitHub.");
-        //   window.location.href = `${BACKEND_URL}/github/login`;
-        //   return;
-        // }
-
-        if (!response.ok) {
-          const text = await response.text(); // just in case
-          console.log("❌ Failed to load viewer links: ", text);
-          throw new Error(text);
-        }
-
-        const data = await response.json();
-        setLinks(data);
-      } catch (err: any) {
-        // console.log(err);
-        setError(err.message);
-      }
+    return () => {
+      dispatch(resetViewerLinksState());
     };
-
-    fetchLinks();
-  }, [token]);
+  }, [dispatch]);
 
   // To create the viewer link
   const handleCreateLink = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-
-    const cleanedRepoName = repoName.trim();
 
     try {
-      const response = await fetch(`${BACKEND_URL}/generate-viewer-link`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          repo_name: cleanedRepoName,
+      dispatch(
+        createViewerLinkSlice({
+          repo_name: repoName.trim(),
           expires_in_days: expiresIn,
           max_views: maxViews,
-        }),
-      });
+        })
+      ).unwrap();
 
-      // console.log(response);
-
-      if (token === null) {
-        return <Loader />;
-      }
-
-      if (!response.ok) {
-        const errText = await response.text();
-        if (response.status === 404) {
-          setError(errText);
-        } else {
-          setError(`❌ Failed to create link: ${errText}`);
-        }
-        return;
-      }
-
-      await response.json();
-      // const data = await response.json();
-      // console.log("Generated:", data);
-
-      // To re-fetch links
-      const updated = await fetch(`${BACKEND_URL}/dashboard`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      const refreshed = await updated.json();
-      // console.log(refreshed);
-
-      setLinks(refreshed);
       setRepoName("");
       setMaxViews(100);
       setExpiresIn(30);
     } catch (err: any) {
       setError(err.message);
-    } finally {
-      setLoading(false);
     }
   };
 
   // To fetch user info
   useEffect(() => {
-    if (!token) return;
-
-    const fetchUserInfo = async () => {
-      try {
-        const response = await fetch(`${BACKEND_URL}/me`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        // if (response.status === 401) {
-        //   localStorage.removeItem("github_token");
-        //   alert("Session expired. Please reconnect your GitHub.");
-        //   window.location.href = `${BACKEND_URL}/github/login`;
-        //   return;
-        // }
-
-        if (!response.ok) {
-          const errorText = await response.text();
-          throw new Error(errorText);
-        }
-
-        const data = await response.json();
-        setUserInfo(data);
-      } catch (err: any) {
-        console.error("❌ Error loading user info:", err);
-        setError(err.message);
-      }
-    };
-
-    if (token) fetchUserInfo();
-  }, [token]);
-
-  // For editing and deleting
-  const refreshDashboard = async () => {
-    const res = await fetch(`${BACKEND_URL}/dashboard`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    const data = await res.json();
-    setLinks(data);
-  };
+    dispatch(fetchUserSlice());
+  }, [dispatch]);
 
   const handleSaveEdit = async (expiresIn: number, maxViews: number) => {
     if (!editingLink) return;
 
     // console.log("Editing link ID:", editingLink);
 
-    await fetch(`${BACKEND_URL}/update-link/${editingLink?.ID}`, {
-      method: "PUT",
-
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-
-      body: JSON.stringify({
-        expires_in_days: expiresIn,
-        max_views: maxViews,
-      }),
-    });
-
-    await refreshDashboard();
-    setEditingLink(null);
+    try {
+      await dispatch(
+        updateViewerLinkSlice({
+          id: editingLink.id,
+          expires_in_days: expiresIn,
+          max_views: maxViews,
+        })
+      ).unwrap();
+    } catch (err: any) {
+      setError(err.message);
+    }
   };
 
   const handleConfirmDelete = async () => {
     if (!deletingLink) return;
 
     // console.log("Deleting link ID:", deletingLink);
-
-    await fetch(`${BACKEND_URL}/delete-link/${deletingLink.ID}`, {
-      method: "DELETE",
-
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    await refreshDashboard();
-    setDeletingLink(null);
+    try {
+      await dispatch(deleteViewerLinkSlice(deletingLink.id)).unwrap();
+      setDeletingLink(null);
+    } catch (err: any) {
+      setError(err.message);
+    }
   };
 
   // To calculate the total links and views
@@ -257,6 +133,14 @@ const DashboardPage = () => {
 
       return true;
     });
+
+  if (authLoading || linksLoading) {
+    return <Loader />;
+  }
+
+  if (authError || linksError || !user) {
+    return <ErrorMessage message={authMessage || linksMessage} />;
+  }
 
   return (
     <div className="min-h-screen bg-white dark:bg-[#0d1117] text-gray-900 dark:text-white px-6 py-12">
@@ -283,12 +167,10 @@ const DashboardPage = () => {
 
         {/* Stats, Greeting, Search */}
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-          {userInfo && (
+          {user && (
             <div className="text-md text-gray-500">
               Welcome{" "}
-              <span className="font-semibold">
-                @{userInfo.github_username} 👋
-              </span>
+              <span className="font-semibold">@{user.github_username} 👋</span>
             </div>
           )}
 
@@ -363,10 +245,10 @@ const DashboardPage = () => {
 
         <button
           type="submit"
-          disabled={loading}
+          disabled={linksLoading}
           className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded transition cursor-pointer"
         >
-          {loading ? "Creating..." : "Create Viewer Link"}
+          {linksLoading ? "Creating..." : "Create Viewer Link"}
         </button>
       </form>
 
