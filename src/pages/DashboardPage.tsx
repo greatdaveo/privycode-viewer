@@ -16,7 +16,6 @@ import {
 import ErrorMessage from "../components/ErrorMessage";
 import { ViewerLink as ReduxViewerLink } from "../redux/links/viewerLinksSlice";
 import { toast } from "react-toastify";
-import { toast } from "react-toastify";
 
 const DashboardPage = () => {
   const [repoName, setRepoName] = useState("");
