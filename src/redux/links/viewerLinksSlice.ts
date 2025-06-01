@@ -1,8 +1,9 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import viewerLinksService from "./viewerLinksService";
+import { toast } from "react-toastify";
 
 export interface ViewerLink {
-  id: number;
+  ID: number;
   token: string;
   repo_name: string;
   max_views: number;
@@ -103,6 +104,7 @@ export const viewerLinksSlice = createSlice({
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload as string;
+        toast.error(action.payload as string);
       })
 
       .addCase(createViewerLinkSlice.pending, (state) => {
@@ -112,12 +114,14 @@ export const viewerLinksSlice = createSlice({
       .addCase(createViewerLinkSlice.fulfilled, (state, action) => {
         state.isLoading = false;
         state.links.push(action.payload);
+        toast.success("Viewer link created successfully!");
       })
 
       .addCase(createViewerLinkSlice.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload as string;
+        toast.error(action.payload as string);
       })
 
       .addCase(updateViewerLinkSlice.pending, (state) => {
@@ -128,14 +132,16 @@ export const viewerLinksSlice = createSlice({
         state.isLoading = false;
         const updated = action.payload;
         state.links = state.links.map((link) =>
-          link.id === updated.id ? updated : link
+          link.ID === updated.id ? updated : link
         );
+        // toast.success("Viewer link updated!");
       })
 
       .addCase(updateViewerLinkSlice.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload as string;
+        toast.error(action.payload as string);
       })
 
       .addCase(deleteViewerLinkSlice.pending, (state) => {
@@ -145,13 +151,16 @@ export const viewerLinksSlice = createSlice({
       .addCase(deleteViewerLinkSlice.fulfilled, (state, action) => {
         state.isLoading = false;
         const deletedId = action.payload;
-        state.links = state.links.filter((link) => link.id !== deletedId);
+        state.links = state.links.filter((link) => {
+          link.ID !== deletedId;
+        });
       })
 
       .addCase(deleteViewerLinkSlice.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload as string;
+        toast.error(action.payload as string);
       });
   },
 });

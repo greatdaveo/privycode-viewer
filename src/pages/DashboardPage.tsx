@@ -15,6 +15,7 @@ import {
 } from "../redux/links/viewerLinksSlice";
 import ErrorMessage from "../components/ErrorMessage";
 import { ViewerLink as ReduxViewerLink } from "../redux/links/viewerLinksSlice";
+import { toast } from "react-toastify";
 
 const DashboardPage = () => {
   const [repoName, setRepoName] = useState("");
@@ -72,9 +73,12 @@ const DashboardPage = () => {
         })
       ).unwrap();
 
-      setRepoName("");
-      setMaxViews(100);
-      setExpiresIn(30);
+      dispatch(fetchViewerLinksSlice());
+
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      // setRepoName("");
+      // setMaxViews(100);
+      // setExpiresIn(30);
     } catch (err: any) {
       setError(err.message);
     }
@@ -93,11 +97,17 @@ const DashboardPage = () => {
     try {
       await dispatch(
         updateViewerLinkSlice({
-          id: editingLink.id,
+          id: editingLink.ID,
           expires_in_days: expiresIn,
           max_views: maxViews,
         })
       ).unwrap();
+
+      dispatch(fetchViewerLinksSlice());
+
+      setEditingLink(null);
+      toast.success(`Updated ${editingLink.repo_name} successfully.`);
+      window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (err: any) {
       setError(err.message);
     }
@@ -108,8 +118,12 @@ const DashboardPage = () => {
 
     // console.log("Deleting link ID:", deletingLink);
     try {
-      await dispatch(deleteViewerLinkSlice(deletingLink.id)).unwrap();
+      await dispatch(deleteViewerLinkSlice(deletingLink.ID)).unwrap();
+      dispatch(fetchViewerLinksSlice());
+
       setDeletingLink(null);
+      toast.success(`${deletingLink.repo_name} viewer link deleted.`);
+      window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (err: any) {
       setError(err.message);
     }
@@ -119,12 +133,14 @@ const DashboardPage = () => {
   const totalLinks = links.length;
   const totalViews = links.reduce((sum, link) => sum + link.view_count, 0);
 
+  // console.log(totalViews);
+
   // To filter links based on search
   const now = new Date();
 
   const filteredLinks = links
     .filter((link) =>
-      link.repo_name.toLowerCase().includes(search.toLowerCase())
+      link.repo_name?.toLowerCase().includes(search.toLowerCase())
     )
     .filter((link) => {
       if (filter === "active") return new Date(link.expires_at) > now;
@@ -180,8 +196,10 @@ const DashboardPage = () => {
               links
             </div>
             <div className="bg-gray-100 dark:bg-[#161b22] rounded p-3 shadow-sm">
-              <span className="font-semibold text-lg">{totalViews}</span> total
-              views
+              <span className="font-semibold text-lg">
+                {totalViews.toString()}
+              </span>{" "}
+              total views
             </div>
           </div>
 
@@ -297,7 +315,10 @@ const DashboardPage = () => {
 
               <div className="flex gap-3 mt-4">
                 <button
-                  onClick={() => setEditingLink(link)}
+                  onClick={() => {
+                    // console.log("Edited Link", link);
+                    setEditingLink(link);
+                  }}
                   className="text-blue-600 hover:text-blue-800 text-sm"
                   title="Edit viewer link"
                 >
@@ -305,7 +326,10 @@ const DashboardPage = () => {
                 </button>
 
                 <button
-                  onClick={() => setDeletingLink(link)}
+                  onClick={() => {
+                    // console.log("Deleted :", link);
+                    setDeletingLink(link);
+                  }}
                   className="text-red-600 hover:text-red-800 text-sm"
                   title="Delete viewer link"
                 >

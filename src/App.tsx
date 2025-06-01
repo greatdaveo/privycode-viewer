@@ -8,7 +8,10 @@ import PageNotFound from "./pages/PageNotFound";
 import { useEffect, useState } from "react";
 import { Loader } from "lucide-react";
 import ProtectedRoute from "./components/ProtectedRoute";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
+// localStorage.removeItem("github_token");
 // localStorage.removeItem("github_token");
 
 export default function App() {
@@ -37,6 +40,8 @@ export default function App() {
     <div className="bg-gradient-to-b from-white to-gray-100 dark:from-[#0d1117] dark:to-[#161b22] flex flex-col text-gray-900 dark:text-gray-100 font-sans min-h-screen">
       <NavBar />
 
+      <ToastContainer position="top-center" />
+
       <Routes>
         <Route path="/" element={<HomePage />} />
 
@@ -48,6 +53,7 @@ export default function App() {
             </ProtectedRoute>
           }
         />
+
 
         <Route path="/view/:token" element={<CodeViewerPageWrapper />} />
         <Route path="*" element={<PageNotFound />} />
