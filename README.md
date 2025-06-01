@@ -7,13 +7,12 @@ PrivyCode is a secure platform that allows developers to share **read-only acces
 
 ## 🚀 Features
 
-- 🔗 Generate expiring viewer links to private GitHub repositories
-- 👁️ Allow recruiters to browse your code — no GitHub login required
-- ✂️ Read-only access — no forking or editing
-- 📦 Track view limits and expiration per link
-- 🧑‍💻 Developer dashboard to manage links
-- 🔄 Light/dark theme support
-- 📝 Copy, edit, delete links with ease
+- Generate expiring viewer links to private GitHub repositories
+- Allow recruiters to browse your code — no GitHub login required
+- Read-only access — no forking or editing
+- Track view limits and expiration per link
+- Developer dashboard to manage links
+- Copy, edit, delete links with ease
 
 ---
 
@@ -53,15 +52,6 @@ Make sure to create a `.env` in `client/` with:
 ```
 VITE_BACKEND_URL=http://localhost:8080
 ```
-
----
-
-## ✅ Future Improvements
-
-* Analytics per link (view history, time opened)
-* AI-powered repo summaries
-* GitHub repo insights integration
-
 ---
 
 ## 👨‍💻 Developed By
