@@ -16,6 +16,7 @@ import {
 import ErrorMessage from "../components/ErrorMessage";
 import { ViewerLink as ReduxViewerLink } from "../redux/links/viewerLinksSlice";
 import { toast } from "react-toastify";
+import { toast } from "react-toastify";
 
 const DashboardPage = () => {
   const [repoName, setRepoName] = useState("");
@@ -65,7 +66,7 @@ const DashboardPage = () => {
     e.preventDefault();
 
     try {
-      dispatch(
+      await dispatch(
         createViewerLinkSlice({
           repo_name: repoName.trim(),
           expires_in_days: expiresIn,
@@ -73,7 +74,7 @@ const DashboardPage = () => {
         })
       ).unwrap();
 
-      dispatch(fetchViewerLinksSlice());
+      await dispatch(fetchViewerLinksSlice());
 
       window.scrollTo({ top: 0, behavior: "smooth" });
       // setRepoName("");
@@ -103,7 +104,7 @@ const DashboardPage = () => {
         })
       ).unwrap();
 
-      dispatch(fetchViewerLinksSlice());
+      await dispatch(fetchViewerLinksSlice());
 
       setEditingLink(null);
       toast.success(`Updated ${editingLink.repo_name} successfully.`);
@@ -119,9 +120,11 @@ const DashboardPage = () => {
     // console.log("Deleting link ID:", deletingLink);
     try {
       await dispatch(deleteViewerLinkSlice(deletingLink.ID)).unwrap();
-      dispatch(fetchViewerLinksSlice());
+      await dispatch(fetchViewerLinksSlice());
 
       setDeletingLink(null);
+      toast.success(`${deletingLink.repo_name} viewer link deleted.`);
+      window.scrollTo({ top: 0, behavior: "smooth" });
       toast.success(`${deletingLink.repo_name} viewer link deleted.`);
       window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (err: any) {
