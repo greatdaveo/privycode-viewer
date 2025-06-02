@@ -12,7 +12,6 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 // localStorage.removeItem("github_token");
-// localStorage.removeItem("github_token");
 
 export default function App() {
   const [_, setToken] = useState<string | null>(null);
