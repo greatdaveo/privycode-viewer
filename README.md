@@ -1,19 +1,20 @@
 
 # 🔐 PrivyCode
 
-PrivyCode is a secure platform that allows developers to share **read-only access to their private GitHub repositories** with recruiters or collaborators — without making them public or exposing secrets.
+This is the **React Frontend** of the PrivyCode project.
+
+PrivyCode is a secure platform that allows developers to share **read-only access to their private GitHub repositories** with recruiters or collaborators - without making them public or exposing secrets.
 
 ---
 
 ## 🚀 Features
 
-- 🔗 Generate expiring viewer links to private GitHub repositories
-- 👁️ Allow recruiters to browse your code — no GitHub login required
-- ✂️ Read-only access — no forking or editing
-- 📦 Track view limits and expiration per link
-- 🧑‍💻 Developer dashboard to manage links
-- 🔄 Light/dark theme support
-- 📝 Copy, edit, delete links with ease
+- Generate expiring viewer links to private GitHub repositories
+- Allow recruiters to browse your code - no GitHub login required
+- Read-only access - no forking or editing
+- Track view limits and expiration per link
+- Developer dashboard to manage links
+- Copy, edit, delete links with ease
 
 ---
 
@@ -28,7 +29,7 @@ PrivyCode is a secure platform that allows developers to share **read-only acces
 ---
 
 ## 🖼️ Live Demo
-[privycode.com](https://privycode.com)
+[https://privycode.com](https://privycode.com)
 
 ---
 
@@ -48,27 +49,22 @@ npm install
 npm run dev
 ```
 
-Make sure to create a `.env` in `client/` with:
+Create a `.env` file in the project root:
 
 ```
-VITE_BACKEND_URL=http://localhost:8080
+VITE_BACKEND_URL=http://localhost:8080 or your backend url
 ```
-
 ---
 
-## ✅ Future Improvements
-
-* Analytics per link (view history, time opened)
-* AI-powered repo summaries
-* GitHub repo insights integration
+## 🤝 Contributing
+Contributions are welcome!
+If you'd like to suggest new features, improve UI/UX, or report bugs, feel free to fork the project, open an issue and possibly submit a pull request.
 
 ---
 
 ## 👨‍💻 Developed By
-> Olowomeye David [GitHub](https://github.com/greatdaveo)
+> Olowomeye David [GitHub](https://github.com/greatdaveo) [LinkedIn](https://linkedin.com/in/greatdaveo)
 
 ---
-
-```
 
 ```
