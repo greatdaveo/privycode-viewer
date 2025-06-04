@@ -8,6 +8,7 @@ import { GitHubContentItem } from "../types/github";
 import SideBar from "../components/SideBar";
 import MonacoEditor from "@monaco-editor/react";
 import ErrorPage from "./ErrorPage";
+import Loader from "../components/Loader";
 
 export function ViewerPage({ token }: { token: string }) {
   const [contents, setContents] = useState<GitHubContentItem[]>([]);
@@ -41,7 +42,7 @@ export function ViewerPage({ token }: { token: string }) {
         const info = await fetchUserInfo(token);
         setUserInfo(info);
       } catch (error: any) {
-        console.log("❌ Could not load viewer info: ", error);
+        console.log("❌ Could not load user info: ", error);
       }
     };
 
@@ -151,6 +152,11 @@ export function ViewerPage({ token }: { token: string }) {
   if (error) {
     return <ErrorPage title="Error" message={error} />;
   }
+
+  if (!contents) {
+    return <Loader />;
+  }
+
   return (
     <>
       <header className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-[#161b22]">
