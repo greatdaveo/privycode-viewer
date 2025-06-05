@@ -20,15 +20,18 @@ export function ViewerPage({ token }: { token: string }) {
   } | null>(null);
 
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const loadContents = async () => {
       try {
         const data = await fetchRepoContents(token);
         setContents(data);
+        setIsLoading(false);
         // console.log(data);
       } catch (error: any) {
         console.error("❌ Failed to load repo contents:", error);
+        setIsLoading(false);
         setError(error.message || error);
       }
     };
@@ -41,8 +44,10 @@ export function ViewerPage({ token }: { token: string }) {
       try {
         const info = await fetchUserInfo(token);
         setUserInfo(info);
+        setIsLoading(false);
       } catch (error: any) {
-        console.log("❌ Could not load user info: ", error);
+        setIsLoading(false);
+        // console.log("❌ Could not load user info: ", error);
       }
     };
 
@@ -55,11 +60,11 @@ export function ViewerPage({ token }: { token: string }) {
 
     try {
       const content = await fetchFileContent(token, path);
-      console.log(content);
+      // console.log(content);
       setFileContent(content);
-    } catch (error) {
-      console.log(error);
-      setFileContent("Error loading file.");
+    } catch (error: any) {
+      // console.log(error);
+      setFileContent("Error loading file: " + error);
     }
   };
 
@@ -153,7 +158,7 @@ export function ViewerPage({ token }: { token: string }) {
     return <ErrorPage title="Error" message={error} />;
   }
 
-  if (!contents) {
+  if (!contents || isLoading) {
     return <Loader />;
   }
 
